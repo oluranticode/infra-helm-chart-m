@@ -1,0 +1,27 @@
+name: reverse-ip-staging
+project: reverse-ip
+namespace: staging
+values: |-
+  fullnameOverride: reverse-ip-staging
+  image:
+    repository: 486469140679.dkr.ecr.eu-west-1.amazonaws.com/reverse_ip:staging-f6ca3b92d8dd54436a6cec23d9e734f65bf0f6f0
+  namespace: staging
+  deployment:
+    enabled: true
+    containerPort: 4000
+  service:
+    enabled: true
+  podDisruptionBudget:
+    enabled: true
+  ingress:
+    enabled: true
+    host: reverse-ip.michael-ekpang.com
+    paths:
+    - path: /
+      serviceName: reverse-ip-staging
+  secret:
+    enabled: true
+  envFrom:
+  - secretRef:
+      name: db-credentials
+ 

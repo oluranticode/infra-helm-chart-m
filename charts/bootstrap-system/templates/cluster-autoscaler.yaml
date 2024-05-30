@@ -1,0 +1,30 @@
+# https://github.com/kubernetes/autoscaler/blob/master/charts/cluster-autoscaler/values.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-autoscaler
+  namespace: argocd
+spec:
+  project: system
+  source:
+    repoURL: https://kubernetes.github.io/autoscaler
+    chart: cluster-autoscaler
+    targetRevision: "{{ index .Values "targetRevision" "cluster-autoscaler" }}"
+    helm:
+      values: |-
+        autoDiscovery:
+          clusterName: "staging-cluster"
+          cloudProvider: aws
+        rbac:
+          create: true
+          serviceAccount:
+            annotations:
+              eks.amazonaws.com/role-arn: "arn:aws:iam::486469140679:role/staging-cluster-ClusterAutoscaler-Role"
+        awsRegion: "eu-west-1"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - ApplyOutOfSyncOnly=true

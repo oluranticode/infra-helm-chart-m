@@ -1,0 +1,22 @@
+apiVersion: v1
+entries:
+  app-central-chart:
+  - apiVersion: v2
+    created: "2024-03-31T12:24:44.463144+02:00"
+    description: this is app central chart that can be used by all applications
+    digest: f2b547569b0f37b54b3ba55056d9001e1cad29ec968895200cafae4c63f26464
+    name: app-central-chart
+    urls:
+    - https://ekpangmichael.github.io/helm-chart/charts/app-central-chart-0.1.0.tgz
+    version: 0.1.0
+  bootstrap-system:
+  - apiVersion: v2
+    created: "2024-03-31T12:24:44.463492+02:00"
+    description: On bootstrap chart with all the system components govern by ArgoCD
+    digest: 40c0ca2d080a65921047a79b92dc87dfb7cca605d07adc69972f0c27b88e5a6c
+    name: bootstrap-system
+    type: application
+    urls:
+    - https://ekpangmichael.github.io/helm-chart/charts/bootstrap-system-1.0.0.tgz
+    version: 1.0.0
+generated: "2024-03-31T12:24:44.462679+02:00"
