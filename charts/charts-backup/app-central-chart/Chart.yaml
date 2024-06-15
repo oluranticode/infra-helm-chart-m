@@ -1,0 +1,4 @@
+apiVersion: v2
+name: app-central-chart
+version: 0.1.0
+description: this is app central chart that can be used by all applications

@@ -1,0 +1,11 @@
+{{- if (.Values.podDisruptionBudget).enabled  | default false -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.fullnameOverride }}
+spec:
+  maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: {{ .Values.fullnameOverride }}
+{{- end }}
