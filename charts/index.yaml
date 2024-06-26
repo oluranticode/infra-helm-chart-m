@@ -2,21 +2,21 @@ apiVersion: v1
 entries:
   app-central-chart:
   - apiVersion: v2
-    created: "2024-06-14T23:37:31.107465+01:00"
+    created: "2024-06-15T02:52:05.159248+01:00"
     description: this is app central chart that can be used by all applications
-    digest: 0390ad7f2ff95a8a95f84bc72e2bc4332be92283dad845509dbb9a58681c46f3
+    digest: ac1b3ed0097636e759753cee2204adcfaa42f74fe45e0caeca9fe3dcfbb1e9fe
     name: app-central-chart
     urls:
-    - https://oluranticode.github.io/infra-helm-chart-m/app-central-chart-0.1.0.tgz
+    - https://Clinify.github.io/helm-chart/app-central-chart-0.1.0.tgz
     version: 0.1.0
   bootstrap-system:
   - apiVersion: v2
-    created: "2024-06-14T23:37:31.107699+01:00"
+    created: "2024-06-15T02:52:05.159724+01:00"
     description: bootstrap chart with all the system components governed by ArgoCD
-    digest: 95393f78b605dcb8fbf31659a68eee8d581ac3fbec8838a94b64132faad6eb39
+    digest: 96a6997bdd8be12d2132b452d8cde952176168c80a806f9d4dad78c4662bebba
     name: bootstrap-system
     type: application
     urls:
-    - https://oluranticode.github.io/infra-helm-chart-m/bootstrap-system-1.0.0.tgz
+    - https://Clinify.github.io/helm-chart/bootstrap-system-1.0.0.tgz
     version: 1.0.0
-generated: "2024-06-14T23:37:31.106634+01:00"
+generated: "2024-06-15T02:52:05.158531+01:00"

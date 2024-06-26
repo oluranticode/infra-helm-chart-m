@@ -1,0 +1,87 @@
+{{- if (.Values.deployment).enabled  | default false }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullnameOverride}}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+  {{- if (.Values.metadata).annotations }}
+  {{ toYaml .Values.metadata.annotations | indent 4 }}
+  {{- end }}
+spec:
+  selector:
+   matchLabels:
+    app: {{ .Values.fullnameOverride }}
+  replicas: {{ .Values.deployment.replicaCount | default 2 }}
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.fullnameOverride }}
+    spec:
+      {{- if (.Values.serviceAccount).enabled | default false }}
+      serviceAccountName: {{ .Values.fullnameOverride }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Values.fullnameOverride }}
+        {{- if and .Values.image.registry .Values.image.repository .Values.image.tag }}
+        image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+        {{- else }}
+        image: {{ .Values.image.repository }}
+        {{- end }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.deployment.containerPort}}
+          name: http
+          protocol: TCP
+        env:
+        {{- range $key, $val := .Values.env }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+        {{- end }}
+        {{- if (.Values.secret).enabled | default false -}}
+        {{- with .Values.envFrom}}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if (.Values.lProbe).enabled | default false -}} #If enabled=true in the values.yaml, declare the probe parameters in the values.yaml
+        {{- with .Values.livenessProbe }}
+        livenessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if (.Values.rProbe).enabled | default false -}}
+        {{- with .Values.readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        resources:
+        {{- $resources := .Values.resources | default dict }}
+        {{- if $resources }}
+          requests:
+            cpu: {{ ($resources.requests).cpu | default "0.1" | quote }}
+            memory: {{ ($resources.requests).memory | default "50Mi" | quote }} 
+          limits:
+            cpu: {{ ($resources.limits).cpu | default "0.2" | quote }}
+            memory: {{ ($resources.limits).memory | default "300Mi" | quote }}
+        {{- else }}
+          requests:
+            cpu: 0.1
+            memory: 50Mi
+          limits:
+            cpu: 0.2
+            memory: 300Mi
+        {{- end }}
+{{- end }}

@@ -1,0 +1,32 @@
+{{- if (.Values.cronJob).enabled | default false -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.fullnameOverride}}
+spec:
+  schedule: "{{ .Values.cronJob.schedule }}"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .Values.fullnameOverride }}
+              {{- if and .Values.image.registry .Values.image.repository .Values.image.tag }}
+              image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+              {{- else }}
+              image: {{ .Values.image.repository }}
+              {{- end }}
+              imagePullPolicy: IfNotPresent
+              {{- with .Values.cronJob.command }}
+              command:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              {{- if (.Values.secret).enabled | default false -}}
+              {{- with .Values.envFrom }}
+              envFrom:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              {{- end }}
+          restartPolicy: Never
+{{- end }}

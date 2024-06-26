@@ -1,0 +1,27 @@
+{{- if (.Values.ingress).enabled | default false -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.fullnameOverride }}
+  namespace: {{ .Values.namespace }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+   {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName | default "nginx" }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+        {{- range .Values.ingress.paths }}
+          - backend:
+              service:
+                name: {{ .serviceName }}
+                port:
+                {{- $service := .service | default dict }}
+                  number: {{ $service.port | default 80 }}
+            path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+        {{- end }}
+{{- end }}
